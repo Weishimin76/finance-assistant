@@ -371,4 +371,3 @@ class DocumentArchive:
 
 # 全局实例
 document_archive = DocumentArchive()
-archive_manager = document_archive  # 兼容旧代码

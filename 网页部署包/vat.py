@@ -226,11 +226,6 @@ class VATCalculator:
         return "\n".join(lines)
 
 
-# 全局实例
-vat_calculator = VATCalculator()
-calculator = vat_calculator  # 兼容旧代码
-
-
 def calculate_all_vat(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     """
     计算所有国家的 VAT
@@ -238,6 +233,7 @@ def calculate_all_vat(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     Returns:
         {国家: VAT明细}
     """
+    calculator = VATCalculator()
     results = {}
 
     for country in config.vat_rates:

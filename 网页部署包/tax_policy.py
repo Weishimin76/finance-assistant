@@ -216,4 +216,3 @@ class TaxPolicyMonitor:
 
 # 全局实例
 tax_policy_monitor = TaxPolicyMonitor()
-policy_monitor = tax_policy_monitor  # 兼容旧代码
