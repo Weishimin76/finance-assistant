@@ -293,66 +293,58 @@ st.markdown("""
         margin-left: 4px;
     }
     
-    /* 知识滚动条 */
+    /* 知识轮播条 - 单条展示 */
     .tips-container {
-        background: linear-gradient(135deg, #1E3A8A 0%, #1e40af 100%);
-        padding: 16px 32px;
+        background: #1E3A8A;
+        padding: 14px 32px;
         margin: 0 -1rem 24px -1rem;
         overflow: hidden;
         position: relative;
+        height: auto;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
     }
     
     .tips-label {
-        color: rgba(255,255,255,0.6);
+        color: rgba(255,255,255,0.5);
         font-size: 12px;
         font-weight: 600;
-        text-transform: uppercase;
         letter-spacing: 1px;
-        margin-bottom: 8px;
-    }
-    
-    .tips-wrapper {
-        overflow: hidden;
+        margin-right: 20px;
+        flex-shrink: 0;
         white-space: nowrap;
     }
     
-    .tips-track {
-        display: inline-flex;
-        animation: scroll-tips 60s linear infinite;
+    .tips-rotator {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+        color: white;
+        font-size: 13px;
+        line-height: 1.6;
     }
     
-    @keyframes scroll-tips {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-    }
-    
-    .tips-card {
-        display: inline-block;
-        background: rgba(255,255,255,0.1);
-        border-radius: 6px;
-        padding: 12px 20px;
-        margin-right: 24px;
-        max-width: 400px;
-        vertical-align: top;
-    }
-    
-    .tips-card-title {
+    .tips-item-title {
         color: #60A5FA;
         font-size: 13px;
         font-weight: 600;
-        margin-bottom: 4px;
     }
     
-    .tips-card-content {
-        color: white;
-        font-size: 12px;
-        line-height: 1.5;
-        margin-bottom: 4px;
+    .tips-item-sep {
+        color: rgba(255,255,255,0.3);
+        margin: 0 8px;
     }
     
-    .tips-card-source {
-        color: rgba(255,255,255,0.5);
-        font-size: 10px;
+    .tips-item-content {
+        color: rgba(255,255,255,0.85);
+        font-size: 13px;
+    }
+    
+    .tips-item-source {
+        color: rgba(255,255,255,0.4);
+        font-size: 11px;
+        margin-left: 12px;
     }
     
     /* 登录界面 - 极简专业 */
@@ -841,33 +833,34 @@ def get_realtime():
     now = datetime.now()
     return now.strftime("%Y-%m-%d %H:%M:%S")
 
-# ==================== 知识滚动条组件 ====================
+# ==================== 知识轮播条组件 ====================
 def render_knowledge_ticker():
-    """渲染滚动知识条"""
-    # 复制知识列表以实现无缝滚动
-    tips_html = ""
-    for tip in FINANCIAL_TIPS:
-        tips_html += f'''
-        <div class="tips-card">
-            <div class="tips-card-title">{tip["title"]}</div>
-            <div class="tips-card-content">{tip["content"]}</div>
-            <div class="tips-card-source">— {tip["source"]}</div>
-        </div>
-        '''
+    """渲染单条轮播知识条 - 使用Streamlit原生组件"""
+    import hashlib
+    tip_count = len(FINANCIAL_TIPS)
+    start_idx = int(hashlib.md5(str(datetime.now().date()).encode()).hexdigest(), 16) % tip_count
     
-    # 复制一份用于无缝滚动
-    tips_html = tips_html + tips_html
+    # 使用session state控制轮播
+    if "tip_idx" not in st.session_state:
+        st.session_state.tip_idx = start_idx
+    
+    idx = st.session_state.tip_idx
+    tip = FINANCIAL_TIPS[idx]
     
     st.markdown(f'''
     <div class="tips-container">
-        <div class="tips-label">◆ 跨境财务知识学堂</div>
-        <div class="tips-wrapper">
-            <div class="tips-track">
-                {tips_html}
-            </div>
+        <div class="tips-label">◆ 财务知识</div>
+        <div class="tips-rotator">
+            <span class="tips-item-title">{tip["title"]}</span>
+            <span class="tips-item-sep">|</span>
+            <span class="tips-item-content">{tip["content"]}</span>
+            <span class="tips-item-source">— {tip["source"]}</span>
         </div>
     </div>
     ''', unsafe_allow_html=True)
+    
+    # 自动切换到下一条
+    st.session_state.tip_idx = (idx + 1) % tip_count
 
 # ==================== 缓存装饰器 ====================
 @st.cache_data(ttl=300)
