@@ -159,8 +159,20 @@ class PlatformParser:
         """将平台数据转换为标准格式"""
         raise NotImplementedError
 
-    def _safe_float(self, val) -> float:
-        """安全转换为浮点数"""
+    def _safe_float(self, val):
+        """安全转换为浮点数，支持标量或 Series"""
+        if isinstance(val, pd.Series):
+            return pd.to_numeric(
+                val.astype(str).str.replace(",", "", regex=False)
+                  .str.replace("$", "", regex=False)
+                  .str.replace("€", "", regex=False)
+                  .str.replace("£", "", regex=False)
+                  .str.replace("US ", "", regex=False)
+                  .str.replace("CNY", "", regex=False)
+                  .str.replace("USD", "", regex=False)
+                  .str.strip(),
+                errors="coerce"
+            ).fillna(0)
         try:
             if pd.isna(val) or val == "" or val is None:
                 return 0.0
@@ -168,8 +180,13 @@ class PlatformParser:
         except (ValueError, TypeError):
             return 0.0
 
-    def _safe_int(self, val) -> int:
-        """安全转换为整数"""
+    def _safe_int(self, val):
+        """安全转换为整数，支持标量或 Series"""
+        if isinstance(val, pd.Series):
+            return pd.to_numeric(
+                val.astype(str).str.replace(",", "", regex=False).str.strip(),
+                errors="coerce"
+            ).fillna(0).astype(int)
         try:
             return int(float(str(val).replace(",", "").strip()))
         except (ValueError, TypeError):
