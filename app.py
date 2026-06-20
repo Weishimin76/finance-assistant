@@ -2148,7 +2148,6 @@ def main():
 
 # ==================== 启动 ====================
 if __name__ == "__main__":
-    # 初始化session_state默认值
     if "user_id" not in st.session_state:
         st.session_state.user_id = None
     if "username" not in st.session_state:
@@ -2183,4 +2182,4 @@ if __name__ == "__main__":
         st.session_state.upload_action = None
     if "is_processing" not in st.session_state:
         st.session_state.is_processing = False
-    main()
+    main(Fix session_state init for Streamlit Cloud)
