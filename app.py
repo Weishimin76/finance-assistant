@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 AI驱动跨境财务管理平台 v9.1 - 优化升级版
 核心升级：
@@ -691,15 +691,15 @@ def check_network_status():
 def show_login_page():
     """显示登录/注册页面"""
     st.markdown("""
-    <div class="login-container">
-        <div class="login-card">
-            <h1>◆ AI跨境财务管理平台</h1>
-            <p class="subtitle">v9.1 优化升级版 · 实时数据 · 22平台费率 · Excel报表 · 可视化图表</p>
+    <div style="text-align:center; padding: 2rem;">
+        <h1>◆ AI跨境财务管理平台</h1>
+        <p style="color:#666;">v9.1 优化升级版 · 实时数据 · 22平台费率 · Excel报表 · 可视化图表</p>
+    </div>
     """, unsafe_allow_html=True)
 
-    tab_login, tab_register = st.tabs(["登录", "注册"])
-
-    with tab_login:
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.subheader("用户登录")
         with st.form("login_form"):
             username = st.text_input("用户名", placeholder="请输入用户名", key="login_username")
             password = st.text_input("密码", type="password", placeholder="请输入密码", key="login_password")
@@ -719,7 +719,8 @@ def show_login_page():
                     else:
                         st.error("用户名或密码错误")
 
-    with tab_register:
+        st.markdown("---")
+        st.subheader("新用户注册")
         with st.form("register_form"):
             reg_username = st.text_input("用户名", placeholder="请设置用户名", key="reg_username")
             reg_password = st.text_input("密码", type="password", placeholder="请设置密码（至少6位）", key="reg_password")
@@ -741,11 +742,11 @@ def show_login_page():
                 else:
                     user_id = register_user(reg_username, reg_password, reg_email, reg_company)
                     if user_id:
-                        st.success("注册成功！请切换到登录标签页登录")
+                        st.success("注册成功！请登录")
                     else:
                         st.error("用户名已存在，请更换")
 
-    st.markdown("</div></div>", unsafe_allow_html=True)
+
 
 
 # ==================== 顶部标识栏 ====================
