@@ -27,7 +27,10 @@ st.set_page_config(
 
 # ==================== 初始化数据库 ====================
 from database import init_db, register_user, login_user, get_user, save_user_data, get_user_data, save_chat, get_chat_history
-init_db()
+try:
+    init_db()
+except Exception as e:
+    print(f"[WARN] Database init failed: {e}")
 
 # ==================== 延迟导入模块（按需加载）====================
 # 核心解析器和基础工具立即加载
@@ -2145,4 +2148,39 @@ def main():
 
 # ==================== 启动 ====================
 if __name__ == "__main__":
+    # 初始化session_state默认值
+    if "user_id" not in st.session_state:
+        st.session_state.user_id = None
+    if "username" not in st.session_state:
+        st.session_state.username = ""
+    if "user_info" not in st.session_state:
+        st.session_state.user_info = None
+    if "parsed_data" not in st.session_state:
+        st.session_state.parsed_data = None
+    if "normal_data" not in st.session_state:
+        st.session_state.normal_data = None
+    if "anomaly_data" not in st.session_state:
+        st.session_state.anomaly_data = None
+    if "anomaly_summary" not in st.session_state:
+        st.session_state.anomaly_summary = None
+    if "reports" not in st.session_state:
+        st.session_state.reports = {}
+    if "chat_messages" not in st.session_state:
+        st.session_state.chat_messages = []
+    if "ai_engine" not in st.session_state:
+        st.session_state.ai_engine = None
+    if "file_hash" not in st.session_state:
+        st.session_state.file_hash = None
+    if "exchange_data" not in st.session_state:
+        st.session_state.exchange_data = None
+    if "vat_data" not in st.session_state:
+        st.session_state.vat_data = None
+    if "data_status" not in st.session_state:
+        st.session_state.data_status = None
+    if "last_data_refresh" not in st.session_state:
+        st.session_state.last_data_refresh = 0
+    if "upload_action" not in st.session_state:
+        st.session_state.upload_action = None
+    if "is_processing" not in st.session_state:
+        st.session_state.is_processing = False
     main()
