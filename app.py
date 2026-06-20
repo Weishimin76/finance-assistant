@@ -2182,4 +2182,4 @@ if __name__ == "__main__":
         st.session_state.upload_action = None
     if "is_processing" not in st.session_state:
         st.session_state.is_processing = False
-    main(Fix session_state init for Streamlit Cloud)
+    main()
